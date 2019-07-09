@@ -1,6 +1,6 @@
 <template>
   <v-toolbar app dark fixed z-index='1000'>
-    <v-toolbar-title id="_head" onclick="location.href='/'">MH's Blog</v-toolbar-title>
+    <v-toolbar-title id="_head" onclick="location.href='/'">SSD's Blog</v-toolbar-title>
     <v-spacer></v-spacer>
     <v-toolbar-items class="hidden-sm-and-down">
       <v-btn v-for="item in menu" :key="item.title" :to="item.link">{{item.title}}</v-btn>
