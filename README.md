@@ -40,4 +40,8 @@ export default {
   messagingSenderId: '...',
   appId: '...'
 }
+<<<<<<< HEAD
 ```
+=======
+```
+>>>>>>> dd871262bab82060356e0ade6638ffb725b03f32
