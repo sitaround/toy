@@ -1,4 +1,5 @@
-# webmobile-sub2
+# Toy
+Vue와 firebase를 이용한 Toy Project
 
 ## Project setup
 ```
