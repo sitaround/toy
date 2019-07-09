@@ -1,12 +1,6 @@
 <template>
   <v-app>
-    <v-toolbar app>
-      <v-toolbar-title class="headline text-uppercase">
-        Hello?
-      </v-toolbar-title>
-      <v-spacer></v-spacer>
-    </v-toolbar>
-
+    <main-header/>
     <v-content>
       <router-view/>
     </v-content>
@@ -14,12 +8,16 @@
 </template>
 
 <script>
+import MainHeader from '@/components/MainHeader'
 
 export default {
   name: 'App',
+  components: {
+    'main-header': MainHeader
+  },
   data () {
     return {
-      //
+
     }
   }
 }
