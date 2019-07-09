@@ -1,5 +1,6 @@
-# Toy
-Vue와 firebase를 이용한 Toy Project
+# Toy Project
+Vue와 Firebase를 이용한 Toy Project
+---
 
 ## Project setup
 ```
@@ -41,8 +42,4 @@ export default {
   messagingSenderId: '...',
   appId: '...'
 }
-<<<<<<< HEAD
 ```
-=======
-```
->>>>>>> dd871262bab82060356e0ade6638ffb725b03f32
