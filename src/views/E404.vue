@@ -4,5 +4,6 @@
     </div>
 </template>
 <script>
-alert('홈페이지 리뉴얼 중 입니다.')
+alert('응 안돼 돌아가')
+this.$router.push('/')
 </script>
