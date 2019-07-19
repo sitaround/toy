@@ -1,17 +1,16 @@
 <template>
   <v-toolbar app dark fixed z-index='1000'>
-    <v-toolbar-title id="_head" onclick="location.href='/'">SSD's Blog</v-toolbar-title>
+    <v-toolbar-title id="_head" onclick="location.href='/'">MH's Blog</v-toolbar-title>
     <v-spacer></v-spacer>
     <v-toolbar-items class="hidden-sm-and-down">
-      <v-btn v-for="item in menu" :key="item.title" :to="item.link">{{item.title}}</v-btn>
-      <v-btn @click="addBook"><v-icon>mdi-star</v-icon></v-btn>
+      <router-link v-for="item in menu" :key="item.title" :to="item.link" tag="v-btn">{{item.title}}</router-link>
     </v-toolbar-items>
     <v-menu class="hidden-md-and-up">
       <v-toolbar-side-icon slot="activator"><v-icon>mdi-dots-vertical</v-icon></v-toolbar-side-icon>
       <v-list dark>
         <v-list-tile v-for="item in menu" :key="item.title">
           <v-list-tile-content>
-            <router-link :to="item.link" tag="v-list-tile-title">{{item.title}}</router-link>
+            <router-link :to="item.link" tag="v-btn">{{item.title}}</router-link>
           </v-list-tile-content>
         </v-list-tile>
       </v-list>
@@ -21,19 +20,15 @@
 
 <script>
 export default {
-  name: 'main-header',
+  name: 'MainHeader',
   data () {
     return {
       menu: [
         { title: 'Home', link: '/' },
-        { title: 'Post', link: 'post' },
-        { title: 'Portfolio', link: 'portfolio' }
+        { title: 'About Me', link: 'about' },
+        { title: 'Algorithm', link: 'algo' },
+        { title: 'Effective', link: 'effective' }
       ]
-    }
-  },
-  methods: {
-    addBook () {
-      alert('Ctrl + D를 누르면 즐겨찾기가 됩니다.')
     }
   }
 }
