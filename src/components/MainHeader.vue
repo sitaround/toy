@@ -27,7 +27,7 @@ export default {
         { title: 'Home', link: '/' },
         { title: 'About Me', link: 'about' },
         { title: 'Algorithm', link: 'algo' },
-        { title: 'Effective', link: 'effective' }
+        { title: 'DY', link: 'DY' }
       ]
     }
   }
