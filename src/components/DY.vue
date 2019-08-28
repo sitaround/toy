@@ -6,7 +6,7 @@
       </v-flex>
       <v-flex xs8>
         <input type="file" v-on:change="readFile" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"/>
-        <div id="kakaoMap">
+        <div id="staticMap">
 
         </div>
       </v-flex>
@@ -19,11 +19,11 @@
               <th class="_tb">위치</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody id="excelTbody" ref="excelTbody">
             <tr v-for="item in excelData.Sheet1" :name="item[0]" :key="item[0]">
               <td class="_idx">{{item[0]}}</td>
               <td class="_tb">{{item[1]}}</td>
-              <td class="_tb">{{item[2]}}</td>
+              <td class="_tb" :id="item[0]" :ref="item[0]">{{item[2]}}</td>
             </tr>
           </tbody>
         </table>
@@ -31,15 +31,14 @@
     </v-layout>
   </v-container>
 </template>
-<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=068cbd046736afa28819c0140c26020f&libraries=services"></script>
+
 <script>
 import XLSX from 'xlsx'
 export default {
   name: 'DY',
   data () {
     return {
-      excelData: '',
-      excelGeo: []
+      excelData: ''
     }
   },
   mounted () {
@@ -48,10 +47,7 @@ export default {
   methods: {
     isDY () {
       var isOK = prompt('비밀번호를 입력하세요.', '')
-      if(isOK === '나는야vs1')
-        return;
-      else
-        this.$router.push('/')
+      if (isOK !== '1234') { this.$router.push('/') }
     },
     readFile (event) {
       const file = event.target.files[0]
@@ -66,24 +62,44 @@ export default {
           if (roa.length) tmpResult[sheetName] = roa
         })
         this.excelData = tmpResult
+        this.searchLatLng(tmpResult)
       }
       reader.readAsArrayBuffer(file)
-      this.searchLatLng()
+      // this.searchLatLng()
     },
-    searchLatLng () {
+    searchLatLng (excel) {
+      // eslint-disable-next-line
       var geocoder = new kakao.maps.services.Geocoder()
-      var callback = function (result, status) {
-        if (status === kakao.maps.services.Status.OK) {
-          console.log(result)
-        }
+      var cnt = excel.Sheet1.length
+      var markers = []
+      var marker = {}
+      for (var i = 0; i < cnt; i++) {
+        geocoder.addressSearch(excel.Sheet1[i][2], function (result, status) {
+          // eslint-disable-next-line
+          if (status === kakao.maps.services.Status.OK) {
+            var x = result[0]['road_address']['x']
+            var y = result[0]['road_address']['y']
+            // eslint-disable-next-line
+            marker.position = new kakao.maps.LatLng(x, y)
+            marker.text = excel.Sheet1[i][0]
+            markers.push(marker)
+          }
+        })
       }
-      for (var x in this.excelData.Sheet1) {
-        var geo = geocoder.addressSearch(x[2], callback)
-        console.log(geo)
-        this.excelGeo.push(geo)
-      }
+      var jsonMarker = JSON.stringify(markers)
+      console.log(jsonMarker)
+      drawMap(jsonMarker)
     }
   }
+}
+function drawMap (markers) {
+  /* eslint-disable */
+  var staticMapContainer = document.getElementById('staticMap'),
+    staticMapOption = {
+      level : 3,
+      marker : markers
+    }
+  var staticMap = new kakao.maps.StaticMap(staticMapContainer, staticMapOption)
 }
 </script>
 <style>
