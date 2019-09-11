@@ -4,27 +4,9 @@
       <v-flex xs12 mb-1 style="text-align: center;">
         <h1>대일이형 선물</h1>
       </v-flex>
-      <v-flex xs8>
+      <v-flex xs12>
         <input type="file" v-on:change="readFile" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"/>
         <div id="map" style="width:100%;height:1000px;"></div>
-      </v-flex>
-      <v-flex xs4>
-        <table v-if="excelData.Sheet1 != null">
-          <thead>
-            <tr>
-              <th class="_idx">Index</th>
-              <th class="_tb">장소명</th>
-              <th class="_tb">위치</th>
-            </tr>
-          </thead>
-          <tbody id="excelTbody" ref="excelTbody">
-            <tr v-for="item in excelData.Sheet1" :name="item[0]" :key="item[0]">
-              <td class="_idx">{{item[0]}}</td>
-              <td class="_tb">{{item[1]}}</td>
-              <td class="_tb" :id="item[0]" :ref="item[0]">{{item[2]}}</td>
-            </tr>
-          </tbody>
-        </table>
       </v-flex>
     </v-layout>
   </v-container>
@@ -45,7 +27,7 @@ export default {
   methods: {
     isDY () {
       var isOK = prompt('나의 이름은?', '')
-      if (isOK !== '송문회') { this.$router.push('/') }
+      if (isOK !== 'thdansghl') { this.$router.push('/') }
     },
     readFile (event) {
       const file = event.target.files[0]
@@ -73,7 +55,7 @@ export default {
       var mapContainer = document.getElementById('map');
       var mapOption = {
           center: new kakao.maps.LatLng(37.450701, 126.570667),
-          level: 14
+          level: 12
       }
       var map = new kakao.maps.Map(mapContainer, mapOption)
       for (var i = 0; i < cnt; i++) {
@@ -92,9 +74,10 @@ export default {
             //   disableAutoPan: true
             // })
             // infowindow.open(map, marker);
+            var tmp = index + 1;
             var customOverlay = new kakao.maps.CustomOverlay({
               map: map,
-              content: '<div style="background-color:white; border:2px solid red; font-weight:bold">' + index + '</div>',
+              content: '<div style="background-color:white; border:2px solid red; font-weight:bold">' + tmp + '</div>',
               position: coords
             })
             customOverlay.setMap(map)
