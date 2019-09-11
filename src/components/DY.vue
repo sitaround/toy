@@ -6,7 +6,6 @@
       </v-flex>
       <v-flex xs12>
         <input type="file" v-on:change="readFile" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"/>
-        <div id="map" style="width:100%;height:1000px;"></div>
       </v-flex>
     </v-layout>
   </v-container>
@@ -52,7 +51,9 @@ export default {
       var geocoder = new kakao.maps.services.Geocoder()
       var cnt = excel.Sheet1.length
       var positions = []
-      var mapContainer = document.getElementById('map');
+      var myWindow = window.open("", "myWindow", "height="+screen.height+",width="+screen.width)
+      myWindow.document.write("<div id='map' style='width:1500px; height:1000px'></div>")
+      var mapContainer = myWindow.document.getElementById('map');
       var mapOption = {
           center: new kakao.maps.LatLng(37.450701, 126.570667),
           level: 12
