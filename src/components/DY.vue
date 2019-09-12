@@ -1,10 +1,10 @@
 <template>
   <v-container grid-list-md text-center mt-3 mb-3>
     <v-layout wrap>
-      <v-flex xs12 mb-1 style="text-align: center;">
+      <v-flex xs-12 lg-12 mb-1 style="text-align: center;">
         <h1>대일이형 선물</h1>
       </v-flex>
-      <v-flex xs12>
+      <v-flex xs-12 lg-12>
         <input type="file" v-on:change="readFile" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"/>
       </v-flex>
     </v-layout>
@@ -25,8 +25,10 @@ export default {
   },
   methods: {
     isDY () {
-      var isOK = prompt('나의 이름은?', '')
-      if (isOK !== 'thdansghl') { this.$router.push('/') }
+      if (!sessionStorage.isOK) {
+        var isOK = prompt('나의 이름은?', '')
+        if (isOK !== 'thdansghl') { this.$router.push('/') } else { sessionStorage.isOK = true }
+      }
     },
     readFile (event) {
       const file = event.target.files[0]
@@ -41,18 +43,17 @@ export default {
           if (roa.length) tmpResult[sheetName] = roa
         })
         this.excelData = tmpResult
-        this.searchLatLng(tmpResult)
+        this.drawMap(tmpResult)
       }
       reader.readAsArrayBuffer(file)
-      // this.searchLatLng()
     },
-    searchLatLng (excel) {
+    drawMap (excel) {
       /* eslint-disable */
       var geocoder = new kakao.maps.services.Geocoder()
       var cnt = excel.Sheet1.length
       var positions = []
-      var myWindow = window.open("", "myWindow", "height="+screen.height+",width="+screen.width)
-      myWindow.document.write("<div id='map' style='width:1500px; height:1000px'></div>")
+      var myWindow = window.open("", "myWindow")
+      myWindow.document.write("<div id='map' style='width:"+(screen.availWidth-50)+"px; height:"+(screen.availHeight-100)+"px'></div>")
       var mapContainer = myWindow.document.getElementById('map');
       var mapOption = {
           center: new kakao.maps.LatLng(37.450701, 126.570667),
