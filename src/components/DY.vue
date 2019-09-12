@@ -52,8 +52,8 @@ export default {
       var geocoder = new kakao.maps.services.Geocoder()
       var cnt = excel.Sheet1.length
       var positions = []
-      var myWindow = window.open("", "myWindow")
-      myWindow.document.write("<div id='map' style='width:"+(screen.availWidth-50)+"px; height:"+(screen.availHeight-100)+"px'></div>")
+      var myWindow = window.open("", "_self")
+      myWindow.document.write("<html><body><div id='map' style='width:"+(screen.availWidth-50)+"px; height:"+(screen.availHeight-120)+"px'></div></body></html>")
       var mapContainer = myWindow.document.getElementById('map');
       var mapOption = {
           center: new kakao.maps.LatLng(37.450701, 126.570667),
