@@ -52,8 +52,8 @@ export default {
       var geocoder = new kakao.maps.services.Geocoder()
       var cnt = excel.Sheet1.length
       var positions = []
-      var myWindow = window.open("", "_self")
-      myWindow.document.write("<html><body><div id='map' style='width:"+(screen.availWidth-50)+"px; height:"+(screen.availHeight-120)+"px'></div></body></html>")
+      var myWindow = window.open("", "")
+      myWindow.document.write("<html><body><div id='map' style='width:100%; height:100%'></div></body></html>")
       var mapContainer = myWindow.document.getElementById('map');
       var mapOption = {
           center: new kakao.maps.LatLng(37.450701, 126.570667),
@@ -79,7 +79,7 @@ export default {
             var tmp = index + 1;
             var customOverlay = new kakao.maps.CustomOverlay({
               map: map,
-              content: '<div style="background-color:white; border:2px solid red; font-weight:bold">' + tmp + '</div>',
+              content: '<div style="font-size:10px; background-color:white; border:2px solid red; font-weight:bold">' + tmp + '</div>',
               position: coords
             })
             customOverlay.setMap(map)
@@ -99,24 +99,3 @@ export default {
 //   var staticMap = new kakao.maps.StaticMap(staticMapContainer, staticMapOption)
 // }
 </script>
-<style>
-  ._tb {
-    text-align: center;
-  }
-  ._idx{
-    text-align: left;
-    padding-left: 10px;
-    width: 10%;
-  }
-  table {
-    width: 100%;
-    border: 1px solid black;
-    border-collapse: collapse;
-  }
-  th, td {
-    border: 1px solid black;
-  }
-  th {
-    background-color: aqua
-  }
-</style>
