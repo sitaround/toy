@@ -43,48 +43,53 @@ export default {
           if (roa.length) tmpResult[sheetName] = roa
         })
         this.excelData = tmpResult
-        this.drawMap(tmpResult)
+        this.findLatLng(tmpResult)
       }
       reader.readAsArrayBuffer(file)
     },
-    drawMap (excel) {
+    findLatLng (excel) {
       /* eslint-disable */
       var geocoder = new kakao.maps.services.Geocoder()
-      var cnt = excel.Sheet1.length
       var positions = []
-      var myWindow = window.open("", "")
-      myWindow.document.write("<html><body><div id='map' style='width:100%; height:100%'></div></body></html>")
-      var mapContainer = myWindow.document.getElementById('map');
-      var mapOption = {
-          center: new kakao.maps.LatLng(37.450701, 126.570667),
-          level: 12
-      }
-      var map = new kakao.maps.Map(mapContainer, mapOption)
-      for (var i = 0; i < cnt; i++) {
-        positions[i] = excel.Sheet1[i][2]
+      var latlng = []
+      for (var i = 0; i < excel.Sheet1.length; i++){
+        positions[i] = excel.Sheet1[i][2];
       }
       positions.forEach(function (addr, index) {
         geocoder.addressSearch(addr, function (result, status) {
           if (status === kakao.maps.services.Status.OK) {
-            var coords = new kakao.maps.LatLng(result[0].y, result[0].x)
-            // var marker = new kakao.maps.Marker({
-            //   map: map,
-            //   position: coords
-            // })
-            // var infowindow = new kakao.maps.InfoWindow({
-            //   content: '<div style="width:50px;">' + index + '</div>',
-            //   disableAutoPan: true
-            // })
-            // infowindow.open(map, marker);
-            var tmp = index + 1;
-            var customOverlay = new kakao.maps.CustomOverlay({
-              map: map,
-              content: '<div style="font-size:10px; background-color:white; border:2px solid red; font-weight:bold">' + tmp + '</div>',
-              position: coords
-            })
-            customOverlay.setMap(map)
+            var xy = {}
+            xy.x = Number(result[0].x)
+            xy.y = Number(result[0].y)
+            latlng[index] = xy
           }
         })
+      })
+      this.drawMap(latlng)
+    },
+    drawMap (latlng) {
+      /* eslint-disable */
+      var centerX = 0;
+      var centerY = 0;
+      //latlng 배열에서 값을 하나씩 읽지 못함. why?
+      centerX /= latlng.length
+      centerY /= latlng.length
+      var myWindow = window.open("", "")
+      myWindow.document.write("<html><body><div id='map' style='width:100%; height:100%'></div></body></html>")
+      var mapContainer = myWindow.document.getElementById('map');
+      var mapOption = {
+          center: new kakao.maps.LatLng(centerY, centerY),
+          level: 6
+      }
+      var map = new kakao.maps.Map(mapContainer, mapOption)
+      latlng.forEach(function(xy, index){
+        var tmp = index+1
+        var customOverlay = new kakao.maps.customOverlay({
+          map: map,
+          content: '<div style="font-size:10px; background-color:white; border:2px solid red; font-weight:bold">' + tmp + '</div>',
+          positions: new kakao.maps.LatLng(xy.y, xy.x)
+        })
+        customOverlay.setMap(map)
       })
     }
   }
