@@ -55,23 +55,45 @@ export default {
       for (var i = 0; i < excel.Sheet1.length; i++){
         positions[i] = excel.Sheet1[i][2];
       }
-      positions.forEach(function (addr, index) {
-        geocoder.addressSearch(addr, function (result, status) {
-          if (status === kakao.maps.services.Status.OK) {
-            var xy = {}
-            xy.x = Number(result[0].x)
-            xy.y = Number(result[0].y)
-            latlng[index] = xy
-          }
+      /*
+      * 1. busy waiting => while(!cnt)
+      * 2. promise.all  => async await 가능
+      */
+
+      var promises = [];
+
+      function getAddressSearch(addr, index) {
+        return new Promise((resolve) => {
+          //비동기 시작
+          geocoder.addressSearch(addr, function (result, status) {
+            if (status === kakao.maps.services.Status.OK) {
+              var xy = {}
+              xy.x = Number(result[0].x)
+              xy.y = Number(result[0].y)
+              latlng[index] = xy
+            } else {
+              alert(index+1 + "행의 주소를 다시 확인!!!!")
+            }
+            resolve();
+          })
+          //비동기 끝
         })
-      })
-      this.drawMap(latlng)
+      }
+      positions.forEach( function (addr, index) {
+        // 비동기 코드
+        promises.push(getAddressSearch(addr, index))
+        // 비동기 코드 끝
+      });
+      Promise.all(promises).then(() => {this.drawMap(latlng)})
     },
     drawMap (latlng) {
       /* eslint-disable */
       var centerX = 0;
       var centerY = 0;
-      //latlng 배열에서 값을 하나씩 읽지 못함. why?
+      for(var i in latlng){
+        centerX += latlng[i].x
+        centerY += latlng[i].y
+      }
       centerX /= latlng.length
       centerY /= latlng.length
       var myWindow = window.open("", "")
@@ -94,13 +116,4 @@ export default {
     }
   }
 }
-// function drawMap (markers) {
-//   /* eslint-disable */
-//   var staticMapContainer = document.getElementById('staticMap'),
-//     staticMapOption = {
-//       level : 3,
-//       marker : markers
-//     }
-//   var staticMap = new kakao.maps.StaticMap(staticMapContainer, staticMapOption)
-// }
 </script>
