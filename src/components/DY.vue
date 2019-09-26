@@ -99,14 +99,14 @@ export default {
       var mapContainer = myWindow.document.getElementById('map');
       var mapOption = {
           center: new kakao.maps.LatLng(centerY, centerX),
-          level: 6
+          level: 5
       }
       var map = new kakao.maps.Map(mapContainer, mapOption)
       latlng.forEach(function(xy, index){
         var tmp = index+1
         var customOverlay = new kakao.maps.CustomOverlay({
           content: '<div style="font-size:10px; background-color:white; border:2px solid red; font-weight:bold">' + tmp + '</div>',
-          positions: new kakao.maps.LatLng(xy.y, xy.x),
+          position: new kakao.maps.LatLng(xy.y, xy.x),
           zIndex: tmp
         })
         customOverlay.setMap(map)
