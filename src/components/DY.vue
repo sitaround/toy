@@ -33,39 +33,39 @@ export default {
     readFile (event) {
       const file = event.target.files[0]
       const reader = new FileReader()
-      let tmpResult = {}
+      const tmpResult = {}
       reader.onload = (e) => {
         let data = e.target.result
         data = new Uint8Array(data)
-        let excelFile = XLSX.read(data, { type: 'array' })
+        const excelFile = XLSX.read(data, { type: 'array' })
         excelFile.SheetNames.forEach(function (sheetName) {
           const roa = XLSX.utils.sheet_to_json(excelFile.Sheets[sheetName], { header: 1 })
           if (roa.length) tmpResult[sheetName] = roa
         })
         this.excelData = tmpResult
-        this.findLatLng(tmpResult)
+        this.findLatLng(...tmpResult)
       }
       reader.readAsArrayBuffer(file)
     },
     findLatLng (excel) {
       /* eslint-disable */
-      var geocoder = new kakao.maps.services.Geocoder()
-      var positions = []
-      var latlng = []
+      const geocoder = new kakao.maps.services.Geocoder()
+      const positions = []
+      const latlng = []
       for (var i = 0; i < excel.Sheet1.length; i++){
-        positions[i] = excel.Sheet1[i][2];
+        positions.push(excel.Sheet1[i][2]);
       }
       /*
       * 1. busy waiting => while(!cnt)
       * 2. promise.all  => async await 가능
       */
-      var promises = [];
+      const promises = [];
       function getAddressSearch(addr, index) {
         return new Promise((resolve) => {
           //비동기 시작
           geocoder.addressSearch(addr, function (result, status) {
             if (status === kakao.maps.services.Status.OK) {
-              var xy = {}
+              const xy = {}
               xy.x = Number(result[0].x)
               xy.y = Number(result[0].y)
               latlng[index] = xy
@@ -86,25 +86,25 @@ export default {
     },
     drawMap (latlng) {
       /* eslint-disable */
-      var centerX = 0;
-      var centerY = 0;
+      let centerX = 0;
+      let centerY = 0;
       for(var i in latlng){
         centerX += latlng[i].x
         centerY += latlng[i].y
       }
       centerX /= latlng.length
       centerY /= latlng.length
-      var myWindow = window.open("", "_self")
+      const myWindow = window.open("", "_self")
       myWindow.document.write("<html><body><div id='map' style='width:100%; height:100%'></div></body></html>")
-      var mapContainer = myWindow.document.getElementById('map')
-      var mapOption = {
+      const mapContainer = myWindow.document.getElementById('map')
+      const mapOption = {
           center: new kakao.maps.LatLng(centerY, centerX),
           level: 5
       }
-      var map = new kakao.maps.Map(mapContainer, mapOption)
+      const map = new kakao.maps.Map(mapContainer, mapOption)
       latlng.forEach(function(xy, index){
-        var tmp = index+1
-        var customOverlay = new kakao.maps.CustomOverlay({
+        const tmp = index+1
+        const customOverlay = new kakao.maps.CustomOverlay({
           content: '<div style="font-size:12px; background-color:white; border:2px solid red; font-weight:bold; padding:1px">' + tmp + '</div>',
           position: new kakao.maps.LatLng(xy.y, xy.x),
           zIndex: latlng.length-tmp
